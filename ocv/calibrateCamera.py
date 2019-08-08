@@ -26,14 +26,14 @@ class Calibrater():
             cv2.waitKey(2)
 
             try:
-                err, self._camera, self._dist, _, _ = cv2.aruco.calibrateCameraCharuco(allCorners, allIds, self._board, imsize,
-                                                                                None, None)
+                err, self._camera, self._dist, _, _ = cv2.aruco.calibrateCameraCharuco(allCorners, allIds, self._board,
+                                                                                       imsize, None, None)
             except:
                 print('Calibration some err')
 
             print('Calibation Error ' + str(err) + " in Iteration " + str(i))
 
-            if err < 2 and i > 3:
+            if err < 2.0 and i > 3:
                 break
 
         cv2.destroyAllWindows()
