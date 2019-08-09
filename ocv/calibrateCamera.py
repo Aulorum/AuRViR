@@ -12,7 +12,7 @@ class Calibrater():
         allCorners = []
         allIds = []
         for i in range(12):
-            img = cv2.imread('Data/Images/test' + str(i) + '.jpg')
+            img = cv2.imread('Data/Images/new/test' + str(i) + '.jpg')
             imsize = (img.shape[0], img.shape[1])
 
             res = cv2.aruco.detectMarkers(img, self._dict)

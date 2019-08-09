@@ -27,7 +27,7 @@ class Detector():
 
     def loadImage(self, imgNumber):
         try:
-            self.img = cv2.imread('Data/Images/test' + str(imgNumber) + '.jpg')
+            self.img = cv2.imread('Data/Images/new/test' + str(imgNumber) + '.jpg')
             self.gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
             self.imsize = self.gray.shape
         except:
@@ -40,7 +40,7 @@ class Detector():
     def detectMarker(self):
         self.markerCorners, self.markerIds, self.markersRejected = \
             cv2.aruco.detectMarkers(self.gray, self._dict)
-        cv2.aruco.drawDetectedMarkers(self.img, self.markerCorners, self.markerIds)
+        # cv2.aruco.drawDetectedMarkers(self.img, self.markerCorners, self.markerIds)
         self.sortMarkers()
 
     def detectCharucoCorners(self):
@@ -48,11 +48,11 @@ class Detector():
             cv2.aruco.interpolateCornersCharuco(self.markerCorners, self.markerIds, self.gray, self._board)
 
     def estimatePoses(self):
-        rvecs, tvecs, _ = cv2.aruco.estimatePoseSingleMarkers(self.markerCorners, 1, self._camera, self._dist)
+        rvecs, tvecs, axis = cv2.aruco.estimatePoseSingleMarkers(self.markerCorners, 20., self._camera, self._dist)
         #for i in range(rvecs.shape[0]):
-        #    cv2.aruco.drawAxis(self.img, self._camera, self._dist, rvecs[i], tvecs[i], 2)
+        #    cv2.aruco.drawAxis(self.img, self._camera, self._dist, rvecs[i], tvecs[i], 10)
 
-        return rvecs, tvecs
+        return rvecs, tvecs, axis
 
     def sortMarkers(self):
         combinedMarkers = list(zip(self.markerIds.tolist(), self.markerCorners))

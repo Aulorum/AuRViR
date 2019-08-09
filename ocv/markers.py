@@ -31,7 +31,7 @@ class Markers():
             transformation[0:-1, 0:-1] = rotation
             transformation[0:-1, 3] = tvecs[i]
             transformation[3, 3] = 1.0
-            self.markers.append((i, transformation))
+            self.markers.append((i, transformation, rvecs[i], tvecs[i]))
             pass
         pass
 
