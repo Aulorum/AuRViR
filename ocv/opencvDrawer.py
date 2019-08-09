@@ -1,22 +1,18 @@
 import cv2
 import numpy as np
 
-class OpenCVDrawer():
+class OpenCVDrawer:
 
-    def __init__(self):
+    def __init__(self, _camera, _dist):
         self.trackPoints = []
         self.image = []
         self.axis = []
-        self._camera = []
-        self._dist = []
-        self.carInit = False
-
-
-
-    def setParams(self, axis, _camera, _dist):
-        self.axis = axis
         self._camera = _camera
         self._dist = _dist
+
+    def setAxisImage(self, axis, image):
+        self.axis = axis
+        self.image = image
 
     def setTrackPoints(self, trackPoints):
         self.trackPoints = trackPoints
@@ -34,14 +30,15 @@ class OpenCVDrawer():
     def drawTrack(self, number_of_markers):
         track = self.trackPoints.getTrack()
 
-        for i in range(number_of_markers):
-            if i == number_of_markers-1:
-                self.drawLine(tuple((track[i][0])),
-                              tuple(track[0][0]), color=(0, 127, 127))
+        for i in range(len(track)):
+            if i == len(track)-1:
+                h = track[i]
+                self.drawLine(tuple((track[i]['position'])),
+                              tuple(track[0]['position']), color=(0, 127, 127))
             else:
-                self.drawLine(tuple((track[i][0])),
-                              tuple(track[i+1][0]), color=(0, 127, 127))
+                h = track[i]
+                self.drawLine(tuple((track[i]['position'])),
+                              tuple(track[i+1]['position']), color=(0, 127, 127))
 
-    def drawCar(self):
-        if not self.carInit:
-            self.image = cv2.circle(self.image, tuple(self.trackPoints.getTrack()[0][0]), 10, (255, 0, 0), 3)
+    def drawCar(self, car):
+        self.image = cv2.circle(self.image, tuple(car), 10, (255, 0, 0), 3)

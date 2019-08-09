@@ -1,11 +1,11 @@
 import cv2
 import operator
 import numpy as np
-from ocv.calibrateCamera import Calibrater
 
-class Detector():
 
-    def __init__(self):
+class Detector:
+
+    def __init__(self, _camera, _dist):
         self._dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_5X5_250)
         self._board = cv2.aruco.CharucoBoard_create(7, 7, 30, 20, self._dict)
         self._camera = []
@@ -19,15 +19,14 @@ class Detector():
         self.charucoCorners = []
         self.charucoIds = []
         self.imsize = []
-        print('Detector initialization finished')
-
-    def setParams(self, _camera, _dist):
         self._camera = _camera
         self._dist = _dist
+        print('Detector initialization finished')
 
-    def loadImage(self, imgNumber):
+    def loadImage(self, number):
+        self.img = []
         try:
-            self.img = cv2.imread('Data/Images/new/test' + str(imgNumber) + '.jpg')
+            self.img = cv2.imread('Data/Images/new/test' + str(number) + '.jpg')
             self.gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
             self.imsize = self.gray.shape
         except:
@@ -49,8 +48,8 @@ class Detector():
 
     def estimatePoses(self):
         rvecs, tvecs, axis = cv2.aruco.estimatePoseSingleMarkers(self.markerCorners, 20., self._camera, self._dist)
-        #for i in range(rvecs.shape[0]):
-        #    cv2.aruco.drawAxis(self.img, self._camera, self._dist, rvecs[i], tvecs[i], 10)
+        for i in range(rvecs.shape[0]):
+            cv2.aruco.drawAxis(self.img, self._camera, self._dist, rvecs[i], tvecs[i], 10)
 
         return rvecs, tvecs, axis
 

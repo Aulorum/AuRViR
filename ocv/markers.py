@@ -25,6 +25,7 @@ class Markers():
             return None
 
     def setAllMarkersWithVecs(self, rvecs, tvecs):
+        self.markers.clear()
         for i in range(rvecs.shape[0]):
             transformation = np.zeros((4, 4))
             rotation, _ = cv2.Rodrigues(rvecs[i])

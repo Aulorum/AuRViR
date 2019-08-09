@@ -13,3 +13,4 @@ class Renderer():
     def showImage(self, image):
         display = (image.shape[0], image.shape[1])
         pass
+
