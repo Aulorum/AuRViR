@@ -41,4 +41,5 @@ class OpenCVDrawer:
                               tuple(track[i+1]['position']), color=(0, 127, 127))
 
     def drawCar(self, car):
+        print(car)
         self.image = cv2.circle(self.image, tuple(car), 10, (255, 0, 0), 3)

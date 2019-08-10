@@ -5,7 +5,7 @@ import numpy as np
 
 class Detector:
 
-    def __init__(self, _camera, _dist):
+    def __init__(self, _camera, _dist, useWebcam=True):
         self._dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_5X5_250)
         self._board = cv2.aruco.CharucoBoard_create(7, 7, 30, 20, self._dict)
         self._camera = []
@@ -21,16 +21,24 @@ class Detector:
         self.imsize = []
         self._camera = _camera
         self._dist = _dist
+        self.useWebcame = useWebcam
         print('Detector initialization finished')
 
     def loadImage(self, number):
         self.img = []
-        try:
-            self.img = cv2.imread('Data/Images/new/test' + str(number) + '.jpg')
-            self.gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
-            self.imsize = self.gray.shape
-        except:
-            print('No Image found')
+        if self.useWebcame:
+            cap = cv2.VideoCapture(0)
+            ret, img = cap.read()
+            self.img = img
+            self.imsize = (self.img.shape[0], self.img.shape[1])
+            cap.release()
+
+        else:
+            try:
+                self.img = cv2.imread('Data/Images/new/test' + str(number) + '.jpg')
+                self.imsize = self.gray.shape
+            except:
+                print('No Image found')
 
     def showImage(self, image):
         cv2.imshow('image', image)
@@ -38,13 +46,13 @@ class Detector:
 
     def detectMarker(self):
         self.markerCorners, self.markerIds, self.markersRejected = \
-            cv2.aruco.detectMarkers(self.gray, self._dict)
+            cv2.aruco.detectMarkers(self.img, self._dict)
         # cv2.aruco.drawDetectedMarkers(self.img, self.markerCorners, self.markerIds)
         self.sortMarkers()
 
     def detectCharucoCorners(self):
         _, self.charucoCorners, self.charucoIds = \
-            cv2.aruco.interpolateCornersCharuco(self.markerCorners, self.markerIds, self.gray, self._board)
+            cv2.aruco.interpolateCornersCharuco(self.markerCorners, self.markerIds, self.img, self._board)
 
     def estimatePoses(self):
         rvecs, tvecs, axis = cv2.aruco.estimatePoseSingleMarkers(self.markerCorners, 20., self._camera, self._dist)

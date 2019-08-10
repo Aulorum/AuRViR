@@ -17,7 +17,7 @@ class Game:
         pass
 
     def step(self):
-        if keyboard.is_pressed('w'):
+        if keyboard.is_pressed('p'):
             self.car.step(True)
         else:
             self.car.step(False)

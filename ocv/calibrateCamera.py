@@ -2,18 +2,25 @@ import cv2
 
 class Calibrater():
 
-    def __init__(self):
+    def __init__(self, useWebcam=True):
         self._dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_5X5_250)
         self._board = cv2.aruco.CharucoBoard_create(7, 7, 30, 20, self._dict)
         self._camera = []
         self._dist = []
+        self.useWebcame = useWebcam
 
     def calibrate(self):
         allCorners = []
         allIds = []
-        for i in range(12):
-            img = cv2.imread('Data/Images/new/test' + str(i) + '.jpg')
-            imsize = (img.shape[0], img.shape[1])
+        err = 10
+        i = 0
+        while True:
+            if self.useWebcame:
+                ret, img = cv2.VideoCapture(0).read()
+                imsize = (img.shape[0], img.shape[1])
+            else:
+                img = cv2.imread('Data/Images/new/test' + str(i) + '.jpg')
+                imsize = (img.shape[0], img.shape[1])
 
             res = cv2.aruco.detectMarkers(img, self._dict)
             if len(res[0]) > 0:
@@ -29,13 +36,17 @@ class Calibrater():
                 err, self._camera, self._dist, _, _ = cv2.aruco.calibrateCameraCharuco(allCorners, allIds, self._board,
                                                                                        imsize, None, None)
             except:
+                if self.useWebcame:
+                    allIds.clear()
+                    allCorners.clear()
                 print('Calibration some err')
 
             print('Calibation Error ' + str(err) + " in Iteration " + str(i))
 
-            if err < 2.0 and i > 3:
+            if err < 1.5:
                 break
 
+            i += i
         cv2.destroyAllWindows()
 
     def getParameters(self):

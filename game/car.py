@@ -30,4 +30,3 @@ class Car:
             if self.velocity > 0:
                 self.velocity -= self.acceleration
         self.position += self.velocity
-        print(self.position)

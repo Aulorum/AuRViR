@@ -1,4 +1,5 @@
 import cv2
+import time
 from ocv.detectMarker import Detector
 from ocv.calibrateCamera import Calibrater
 from ocv.markers import Markers
@@ -29,12 +30,14 @@ if __name__ == '__main__':
     game.setTPAxisAndMarker(axis, markers)
 
     while True:
+        start_time = time.time()
         image = []
         game.step()
         detector.loadImage(1)
         detector.detectMarker()
         detector.detectCharucoCorners()
         rvecs, tvecs, axis = detector.estimatePoses()
+        print("--- %s seconds ---" % (time.time() - start_time))
         image = detector.getImage()
         markers.setAllMarkersWithVecs(rvecs, tvecs)
         game.setTPAxisAndMarker(axis, markers)
@@ -45,3 +48,4 @@ if __name__ == '__main__':
         image = opencvDrawer.getImage()
         cv2.imshow('image', image)
         cv2.waitKey(1)
+
