@@ -17,8 +17,9 @@ class Game:
         pass
 
     def step(self):
-        if keyboard.is_pressed('p'):
+        if cv2.waitKey(1) == 119:
             self.car.step(True)
+            print('Pressed')
         else:
             self.car.step(False)
         pass
@@ -30,9 +31,12 @@ class Game:
         return self.trackPoints
 
     def getCarPosition(self):
-        part, pos = self.trackPoints.getPartForCar(self.car.getPosition())
-        self.car.setPosition(pos)
-        return part['position']
+        try:
+            part, pos = self.trackPoints.getPartForCar(self.car.getPosition())
+            self.car.setPosition(pos)
+            return part['position']
+        except:
+            pass
 
     def setTPAxisAndMarker(self, axis, markers):
         self.trackPoints.setAxis(axis)
@@ -40,8 +44,6 @@ class Game:
         if not self.carInitialized:
             self.car.setPosition(0)
             self.carInitialized = True
-
-
 
     def setTPParams(self, _camera, _dist):
         self.trackPoints.setParams(_camera, _dist)

@@ -19,23 +19,24 @@ class Detector:
         self.charucoCorners = []
         self.charucoIds = []
         self.imsize = []
+        self.gray = []
         self._camera = _camera
         self._dist = _dist
         self.useWebcame = useWebcam
+        self.cap = cv2.VideoCapture(0)
         print('Detector initialization finished')
 
     def loadImage(self, number):
         self.img = []
         if self.useWebcame:
-            cap = cv2.VideoCapture(0)
-            ret, img = cap.read()
+            ret, img = self.cap.read()
             self.img = img
+            self.gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             self.imsize = (self.img.shape[0], self.img.shape[1])
-            cap.release()
-
         else:
             try:
                 self.img = cv2.imread('Data/Images/new/test' + str(number) + '.jpg')
+                self.gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
                 self.imsize = self.gray.shape
             except:
                 print('No Image found')
@@ -46,26 +47,35 @@ class Detector:
 
     def detectMarker(self):
         self.markerCorners, self.markerIds, self.markersRejected = \
-            cv2.aruco.detectMarkers(self.img, self._dict)
+            cv2.aruco.detectMarkers(self.gray, self._dict)
         # cv2.aruco.drawDetectedMarkers(self.img, self.markerCorners, self.markerIds)
         self.sortMarkers()
 
     def detectCharucoCorners(self):
-        _, self.charucoCorners, self.charucoIds = \
-            cv2.aruco.interpolateCornersCharuco(self.markerCorners, self.markerIds, self.img, self._board)
+        if not self.markerCorners.__len__() == 0:
+            _, self.charucoCorners, self.charucoIds = \
+                cv2.aruco.interpolateCornersCharuco(self.markerCorners, self.markerIds, self.img, self._board)
+        else:
+            print('No markers found')
+
 
     def estimatePoses(self):
-        rvecs, tvecs, axis = cv2.aruco.estimatePoseSingleMarkers(self.markerCorners, 20., self._camera, self._dist)
-        for i in range(rvecs.shape[0]):
-            cv2.aruco.drawAxis(self.img, self._camera, self._dist, rvecs[i], tvecs[i], 10)
+        rvecs = []
+        tvecs = []
+        axis = []
+        if not self.markerCorners.__len__() == 0:
+            rvecs, tvecs, axis = cv2.aruco.estimatePoseSingleMarkers(self.markerCorners, 20., self._camera, self._dist)
+            # for i in range(rvecs.shape[0]):
+            #    cv2.aruco.drawAxis(self.img, self._camera, self._dist, rvecs[i], tvecs[i], 10)
 
         return rvecs, tvecs, axis
 
     def sortMarkers(self):
-        combinedMarkers = list(zip(self.markerIds.tolist(), self.markerCorners))
-        combinedMarkers.sort(key=operator.itemgetter(0))
-        self.markerIds, self.markerCorners = list(zip(*combinedMarkers))
-        self.markerIds = np.asarray(self.markerIds)
+        if not self.markerCorners.__len__() == 0:
+            combinedMarkers = list(zip(self.markerIds.tolist(), self.markerCorners))
+            combinedMarkers.sort(key=operator.itemgetter(0))
+            self.markerIds, self.markerCorners = list(zip(*combinedMarkers))
+            self.markerIds = np.asarray(self.markerIds)
 
     def getImage(self):
         return self.img

@@ -26,15 +26,16 @@ class Markers():
 
     def setAllMarkersWithVecs(self, rvecs, tvecs):
         self.markers.clear()
-        for i in range(rvecs.shape[0]):
-            transformation = np.zeros((4, 4))
-            rotation, _ = cv2.Rodrigues(rvecs[i])
-            transformation[0:-1, 0:-1] = rotation
-            transformation[0:-1, 3] = tvecs[i]
-            transformation[3, 3] = 1.0
-            self.markers.append((i, transformation, rvecs[i], tvecs[i]))
+        try:
+            for i in range(rvecs.shape[0]):
+                transformation = np.zeros((4, 4))
+                rotation, _ = cv2.Rodrigues(rvecs[i])
+                transformation[0:-1, 0:-1] = rotation
+                transformation[0:-1, 3] = tvecs[i]
+                transformation[3, 3] = 1.0
+                self.markers.append((i, transformation, rvecs[i], tvecs[i]))
+        except:
             pass
-        pass
 
     def getAllMarkers(self):
         return self.markers

@@ -30,14 +30,14 @@ if __name__ == '__main__':
     game.setTPAxisAndMarker(axis, markers)
 
     while True:
-        start_time = time.time()
         image = []
-        game.step()
         detector.loadImage(1)
         detector.detectMarker()
+        image = detector.getImage()
+        cv2.imshow('image', image)
+        cv2.waitKey(1)
         detector.detectCharucoCorners()
         rvecs, tvecs, axis = detector.estimatePoses()
-        print("--- %s seconds ---" % (time.time() - start_time))
         image = detector.getImage()
         markers.setAllMarkersWithVecs(rvecs, tvecs)
         game.setTPAxisAndMarker(axis, markers)
@@ -46,6 +46,7 @@ if __name__ == '__main__':
         opencvDrawer.drawTrack(markersUsed)
         opencvDrawer.drawCar(game.getCarPosition())
         image = opencvDrawer.getImage()
+        game.step()
         cv2.imshow('image', image)
         cv2.waitKey(1)
 
