@@ -24,9 +24,10 @@ class Markers():
             print('Invalid get Marker with position ' + str(position))
             return None
 
+
     def setAllMarkersWithVecs(self, rvecs, tvecs):
-        self.markers.clear()
         try:
+            self.markers.clear()
             for i in range(rvecs.shape[0]):
                 transformation = np.zeros((4, 4))
                 rotation, _ = cv2.Rodrigues(rvecs[i])

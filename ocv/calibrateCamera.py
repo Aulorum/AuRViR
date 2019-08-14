@@ -35,6 +35,7 @@ class Calibrater():
             try:
                 err, self._camera, self._dist, _, _ = cv2.aruco.calibrateCameraCharuco(allCorners, allIds, self._board,
                                                                                        imsize, None, None)
+                i += 1
             except:
                 if self.useWebcame:
                     allIds.clear()
@@ -46,7 +47,6 @@ class Calibrater():
             if err < 1.5:
                 break
 
-            i += i
         cv2.destroyAllWindows()
 
     def getParameters(self):

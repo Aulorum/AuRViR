@@ -3,12 +3,13 @@ import numpy as np
 
 class OpenCVDrawer:
 
-    def __init__(self, _camera, _dist):
+    def __init__(self, _camera, _dist, detector):
         self.trackPoints = []
         self.image = []
         self.axis = []
         self._camera = _camera
         self._dist = _dist
+        self.detector = detector
 
     def setAxisImage(self, axis, image):
         self.axis = axis
@@ -27,16 +28,15 @@ class OpenCVDrawer:
         self.image = cv2.line(self.image, start, finish, color, 5)
         pass
 
-    def drawTrack(self, number_of_markers):
+    def drawTrack(self):
         track = self.trackPoints.getTrack()
-
+        if len(track) < 100:
+            print(len(track))
         for i in range(len(track)):
             if i == len(track)-1:
-                h = track[i]
                 self.drawLine(tuple((track[i]['position'])),
                               tuple(track[0]['position']), color=(0, 127, 127))
             else:
-                h = track[i]
                 self.drawLine(tuple((track[i]['position'])),
                               tuple(track[i+1]['position']), color=(0, 127, 127))
 

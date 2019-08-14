@@ -1,4 +1,3 @@
-import keyboard
 import cv2
 
 from game.car import Car
@@ -17,9 +16,10 @@ class Game:
         pass
 
     def step(self):
+        # Key "w" is opencv 119
         if cv2.waitKey(1) == 119:
             self.car.step(True)
-            print('Pressed')
+            print('HI')
         else:
             self.car.step(False)
         pass
@@ -35,8 +35,8 @@ class Game:
             part, pos = self.trackPoints.getPartForCar(self.car.getPosition())
             self.car.setPosition(pos)
             return part['position']
-        except:
-            pass
+        except TypeError:
+            self.car.setPosition(0)
 
     def setTPAxisAndMarker(self, axis, markers):
         self.trackPoints.setAxis(axis)

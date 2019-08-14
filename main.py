@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     detector = Detector(_camera, _dist)
     game = Game(_camera, _dist, markersUsed)
-    opencvDrawer = OpenCVDrawer(_camera, _dist)
+    opencvDrawer = OpenCVDrawer(_camera, _dist, detector)
 
     # To set car base Position
     detector.loadImage(0)
@@ -30,23 +30,31 @@ if __name__ == '__main__':
     game.setTPAxisAndMarker(axis, markers)
 
     while True:
+
+        start = time.time()
         image = []
+        # Loads Image from Webcam
         detector.loadImage(1)
+        # Detects Marker
         detector.detectMarker()
-        image = detector.getImage()
-        cv2.imshow('image', image)
-        cv2.waitKey(1)
+        # detects Charuco Corners
         detector.detectCharucoCorners()
+        # Estimates marker poses
         rvecs, tvecs, axis = detector.estimatePoses()
+        # Gets Image
         image = detector.getImage()
+        # sets Markers
         markers.setAllMarkersWithVecs(rvecs, tvecs)
+        # Set Axis, markers
         game.setTPAxisAndMarker(axis, markers)
+        game.step()
+        # Sets image in opencvDrawer
         opencvDrawer.setAxisImage(axis, image)
         opencvDrawer.setTrackPoints(game.getTrackPoints())
-        opencvDrawer.drawTrack(markersUsed)
+        opencvDrawer.drawTrack()
         opencvDrawer.drawCar(game.getCarPosition())
         image = opencvDrawer.getImage()
-        game.step()
+        print(time.time()-start)
         cv2.imshow('image', image)
         cv2.waitKey(1)
 
