@@ -19,6 +19,7 @@ class Game:
         # Key "w" is opencv 119
         if cv2.waitKey(1) == 119:
             self.car.step(True)
+
         else:
             self.car.step(False)
         pass
