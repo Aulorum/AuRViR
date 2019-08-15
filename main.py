@@ -36,7 +36,6 @@ if __name__ == '__main__':
 
     while True:
 
-        start = time.time()
         image = []
         # Loads Image from Webcam
         detector.loadImage(1)
@@ -45,6 +44,7 @@ if __name__ == '__main__':
         # detects Charuco Corners
         # Estimates marker poses
         if all_detected:
+            #detector.estimateHomography(1, game.getCar().getModel())
             rvecs, tvecs, axis = detector.estimatePoses()
             # Gets Image
             image = detector.getImage()
@@ -59,7 +59,6 @@ if __name__ == '__main__':
             opencvDrawer.drawTrack()
             opencvDrawer.drawCar(game.getCarPosition())
             image = opencvDrawer.getImage()
-            print(time.time()-start)
             cv2.imshow('image', image)
             cv2.waitKey(1)
         else:
