@@ -8,6 +8,8 @@ class Calibrater():
         self._camera = []
         self._dist = []
         self.useWebcame = useWebcam
+        # Use (1) at notebook
+        self.webcame = cv2.VideoCapture(0)
 
     def calibrate(self):
         allCorners = []
@@ -16,7 +18,7 @@ class Calibrater():
         i = 0
         while True:
             if self.useWebcame:
-                ret, img = cv2.VideoCapture(0).read()
+                ret, img = self.webcame.read()
                 imsize = (img.shape[0], img.shape[1])
             else:
                 img = cv2.imread('Data/Images/new/test' + str(i) + '.jpg')
@@ -47,6 +49,7 @@ class Calibrater():
             if err < 1.5:
                 break
 
+        self.webcame.release()
         cv2.destroyAllWindows()
 
     def getParameters(self):
