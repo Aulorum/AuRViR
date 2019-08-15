@@ -44,7 +44,7 @@ if __name__ == '__main__':
         # detects Charuco Corners
         # Estimates marker poses
         if all_detected:
-            #detector.estimateHomography(1, game.getCar().getModel())
+            detector.estimateHomography(1, game.getCar().getModel())
             rvecs, tvecs, axis = detector.estimatePoses()
             # Gets Image
             image = detector.getImage()

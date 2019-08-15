@@ -9,7 +9,7 @@ class Calibrater():
         self._dist = []
         self.useWebcame = useWebcam
         # Use (1) at notebook
-        self.webcame = cv2.VideoCapture(0)
+        self.webcame = cv2.VideoCapture(1)
 
     def calibrate(self):
         allCorners = []

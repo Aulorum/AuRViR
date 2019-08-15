@@ -10,7 +10,7 @@ class Car:
         self.max_velocity = max_velocity
         self.acceleration = acceleration
         self.marker = 0
-        self.model = OBJ("Data/Models/fox/low-poly-fox-by-pixelmannen.obj")
+        self.model = OBJ("Data/Models/fox/fox.obj")
 
     def getModel(self):
         return self.model

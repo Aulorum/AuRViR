@@ -26,13 +26,12 @@ class Detector:
         self._dist = _dist
         self.useWebcame = useWebcam
         # Use (1) at notebook
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(1)
         self.possible_ids = []
         self.start_time = 0
         self.marker_models = []
         for i in range(12):
-            self.marker_models.append(cv2.cvtColor(cv2.imread("Data/Marker/marker" + str(i) + ".png"),
-                                                   cv2.COLOR_BGR2GRAY))
+            self.marker_models.append(cv2.imread("Data/Marker/marker" + str(i) + ".png"))
         self.orb = cv2.ORB_create()
         self.bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
         self.min_matches = 8
@@ -188,7 +187,7 @@ class Detector:
         """
         vertices = obj.vertices
         scale_matrix = np.eye(3) * 3
-        h, w = model.shape
+        h, w = model.shape[0:2]
 
         for face in obj.faces:
             face_vertices = face[0]
