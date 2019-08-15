@@ -25,7 +25,8 @@ class OpenCVDrawer:
         return self.image
 
     def drawLine(self, start, finish, color=(0, 255, 0)):
-        self.image = cv2.line(self.image, start, finish, color, 5)
+        h = np.array([start, finish])
+        self.image = cv2.polylines(self.image, [h], True, color, 4)
         pass
 
     def drawTrack(self):
@@ -34,11 +35,11 @@ class OpenCVDrawer:
             print(len(track))
         for i in range(len(track)):
             if i == len(track)-1:
-                self.drawLine(tuple((track[i]['position'])),
-                              tuple(track[0]['position']), color=(0, 127, 127))
+                self.drawLine(track[i]['position'],
+                              track[0]['position'], color=(180, 105, 255))
             else:
-                self.drawLine(tuple((track[i]['position'])),
-                              tuple(track[i+1]['position']), color=(0, 127, 127))
+                self.drawLine(track[i]['position'],
+                              track[i+1]['position'], color=(180, 105, 255))
 
     def drawCar(self, car):
         try:
