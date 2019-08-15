@@ -46,7 +46,7 @@ class Calibrater():
 
             print('Calibation Error ' + str(err) + " in Iteration " + str(i))
 
-            if err < 1.5:
+            if err < 1.5 and i > 8:
                 break
 
         self.webcame.release()
