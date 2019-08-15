@@ -6,10 +6,10 @@ from game.trackPoints import TrackPoints
 
 class Game:
 
-    def __init__(self, _camera, _dist, maxMarkerId):
+    def __init__(self, _camera, _dist):
         self.car = Car()
         self.time = 0
-        self.trackPoints = TrackPoints(_camera, _dist, maxMarkerId)
+        self.trackPoints = TrackPoints(_camera, _dist)
         self.img = []
         self.imsize = []
         self.carInitialized = False

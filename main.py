@@ -18,16 +18,21 @@ if __name__ == '__main__':
     _camera, _dist = calibrater.getParameters()
 
     detector = Detector(_camera, _dist)
-    game = Game(_camera, _dist, markersUsed)
+    game = Game(_camera, _dist)
     opencvDrawer = OpenCVDrawer(_camera, _dist, detector)
+
+    time.sleep(5)
 
     # To set car base Position
     detector.loadImage(0)
-    detector.detectMarker()
-    detector.detectCharucoCorners()
-    rvecs, tvecs, axis = detector.estimatePoses()
-    markers.setAllMarkersWithVecs(rvecs, tvecs)
-    game.setTPAxisAndMarker(axis, markers)
+    detector.startTimer()
+    all_detected = detector.detectMarker()
+    # detects Charuco Corners
+    # Estimates marker poses
+    if all_detected:
+        rvecs, tvecs, axis = detector.estimatePoses()
+        markers.setAllMarkersWithVecs(rvecs, tvecs)
+        game.setTPAxisAndMarker(axis, markers)
 
     while True:
 
@@ -36,25 +41,31 @@ if __name__ == '__main__':
         # Loads Image from Webcam
         detector.loadImage(1)
         # Detects Marker
-        detector.detectMarker()
+        all_detected = detector.detectMarker()
         # detects Charuco Corners
-        detector.detectCharucoCorners()
         # Estimates marker poses
-        rvecs, tvecs, axis = detector.estimatePoses()
-        # Gets Image
-        image = detector.getImage()
-        # sets Markers
-        markers.setAllMarkersWithVecs(rvecs, tvecs)
-        # Set Axis, markers
-        game.setTPAxisAndMarker(axis, markers)
-        game.step()
-        # Sets image in opencvDrawer
-        opencvDrawer.setAxisImage(axis, image)
-        opencvDrawer.setTrackPoints(game.getTrackPoints())
-        opencvDrawer.drawTrack()
-        opencvDrawer.drawCar(game.getCarPosition())
-        image = opencvDrawer.getImage()
-        print(time.time()-start)
-        cv2.imshow('image', image)
-        cv2.waitKey(1)
+        if all_detected:
+            rvecs, tvecs, axis = detector.estimatePoses()
+            # Gets Image
+            image = detector.getImage()
+            # sets Markers
+            markers.setAllMarkersWithVecs(rvecs, tvecs)
+            # Set Axis, markers
+            game.setTPAxisAndMarker(axis, markers)
+            game.step()
+            # Sets image in opencvDrawer
+            opencvDrawer.setAxisImage(axis, image)
+            opencvDrawer.setTrackPoints(game.getTrackPoints())
+            opencvDrawer.drawTrack()
+            opencvDrawer.drawCar(game.getCarPosition())
+            image = opencvDrawer.getImage()
+            print(time.time()-start)
+            cv2.imshow('image', image)
+            cv2.waitKey(1)
+        else:
+            #detector.drawMarker()
+            image = detector.getImage()
+            cv2.imshow('image', image)
+            cv2.waitKey(1)
+
 
