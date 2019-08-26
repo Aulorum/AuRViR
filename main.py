@@ -21,7 +21,7 @@ if __name__ == '__main__':
     game = Game(_camera, _dist)
     opencvDrawer = OpenCVDrawer(_camera, _dist, detector)
 
-    #time.sleep(5)
+    time.sleep(5)
 
     # To set car base Position
     detector.loadImage(0)
@@ -62,7 +62,7 @@ if __name__ == '__main__':
             cv2.imshow('image', image)
             cv2.waitKey(1)
         else:
-            #detector.drawMarker()
+            # detector.drawMarker()
             image = detector.getImage()
             cv2.imshow('image', image)
             cv2.waitKey(1)
